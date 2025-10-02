@@ -4,7 +4,7 @@ export const rootQuery = `#graphql
         type Query {
             health:Health            
         }
-         type Health implements IHealth{
+         type Health{
             service:String
             status:Boolean
             db:Boolean
