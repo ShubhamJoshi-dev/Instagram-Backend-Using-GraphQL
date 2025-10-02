@@ -1,5 +1,3 @@
-import { IHealth } from "../../interface/graphql.interface";
-
 export const rootQuery = `#graphql 
         type Query {
             health:Health            
