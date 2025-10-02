@@ -1,4 +1,4 @@
-import graphLogger from "../c/logger.libs";
+import graphLogger from "../libs/logger.libs";
 import mongoose from "mongoose";
 import getFileInstance from "../helpers/file.helper";
 import path from "path";
