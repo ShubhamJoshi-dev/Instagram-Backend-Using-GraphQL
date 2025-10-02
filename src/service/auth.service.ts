@@ -5,6 +5,7 @@ import StatusCode from "http-status-codes";
 import getPayloadInstances from "../helpers/payload.helper";
 import getBaseQuery from "../database/operations/base";
 import userModel from "../database/models/user.schema";
+import { excludeKeysFromObject } from "../utils/common.utils";
 
 async function createUserService(args: { user: IAuthCreate }) {
   const { name, email, password } = args.user;
@@ -45,7 +46,9 @@ async function createUserService(args: { user: IAuthCreate }) {
     userModel
   );
 
-  return saveResult;
+  return {
+    user: excludeKeysFromObject(saveResult._doc, "_id,__v"),
+  };
 }
 
 export default createUserService;
