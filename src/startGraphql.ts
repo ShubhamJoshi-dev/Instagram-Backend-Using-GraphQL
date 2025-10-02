@@ -4,7 +4,7 @@ import { ErrorAnyType } from "./types/types";
 import { expressMiddleware } from "@as-integrations/express5";
 import { ApolloServerAbstract } from "./abstraction/apollo.abstract";
 import { baseConnector } from "./base/base.connect";
-import graphLogger from "./c/logger.libs";
+import graphLogger from "./libs/logger.libs";
 import express from "express";
 import http from "http";
 import cors from "cors";

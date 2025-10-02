@@ -1,5 +1,5 @@
 import { connectMongoose } from "../database/connect";
-import graphLogger from "../c/logger.libs";
+import graphLogger from "../libs/logger.libs";
 
 async function baseConnector(): Promise<{ status: boolean }> {
   let allConnectedStatus = true;

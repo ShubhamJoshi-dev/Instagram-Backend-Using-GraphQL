@@ -1,6 +1,6 @@
 import fsPromise from "fs/promises";
 import fs from "fs";
-import graphLogger from "../c/logger.libs";
+import graphLogger from "../libs/logger.libs";
 
 class FileOperation {
   public async unLinkFiles(filePath: string) {
