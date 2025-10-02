@@ -4,7 +4,12 @@ export const rootQuery = `#graphql
         }
          type Health{
             service:String
-            status:Boolean
-            db:Boolean
+            usage:Usage
+            mongo:Boolean
+        }
+
+        type Usage {
+            user:Int
+            system:Int
         }
 `;

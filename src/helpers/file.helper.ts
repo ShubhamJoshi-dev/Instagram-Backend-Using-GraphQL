@@ -1,5 +1,6 @@
 import fsPromise from "fs/promises";
 import fs from "fs";
+import graphLogger from "../libs/logger.libs";
 
 class FileOperation {
   public async unLinkFiles(filePath: string) {
@@ -26,6 +27,11 @@ class FileHelper extends FileOperation {
       encoding: "utf-8",
     });
     return;
+  }
+
+  public async readFromFile(filePath: string) {
+    const content = await fsPromise.readFile(filePath, { encoding: "utf-8" });
+    return JSON.parse(content);
   }
 }
 

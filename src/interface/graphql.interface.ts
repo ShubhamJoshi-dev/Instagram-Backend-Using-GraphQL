@@ -1,5 +1,10 @@
+export interface IUsage {
+  user: number;
+  system: number;
+}
+
 export interface IHealth {
   service: string;
-  db: boolean;
-  status: boolean;
+  mongo: boolean;
+  usage: IUsage;
 }
