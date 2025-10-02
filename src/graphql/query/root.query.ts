@@ -23,6 +23,11 @@ export const rootQuery = `#graphql
             password:String!
         }
 
+        type Token {
+            accessToken:String!
+            refreshToken:String!
+        }
+
 
 
         type CustomErrorResponse{
@@ -37,11 +42,17 @@ export const rootQuery = `#graphql
 
         }
 
+        type UserLoginResponse {
+            tokens:Token
+            error:CustomErrorResponse
+        }
+
 
         # ----------- Mutation ------------- #
 
         type Mutation {
             createUser(user:UserCreateInput!):UserCreateResponse
+            loginUser(user:UserLoginInput!):UserLoginResponse
         }
 
         
@@ -50,6 +61,11 @@ export const rootQuery = `#graphql
         input UserCreateInput {
             name:String
             email:String
+            password:String
+        }
+
+        input UserLoginInput {
+            name:String
             password:String
         }
 `;

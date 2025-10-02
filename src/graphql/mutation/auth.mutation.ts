@@ -1,9 +1,16 @@
-import { IAuthCreate } from "../../interface/auth.interface";
-import createUserService from "../../service/auth.service";
+import {
+  createUserService,
+  loginUserService,
+} from "../../service/auth.service";
 
 async function createUserMutation(payload: any) {
   const graphqlResponse = await createUserService(payload);
   return graphqlResponse;
 }
 
-export { createUserMutation };
+async function loginUserMutation(payload: any) {
+  const graphqlResponse = await loginUserService(payload);
+  return graphqlResponse
+}
+
+export { createUserMutation , loginUserMutation};

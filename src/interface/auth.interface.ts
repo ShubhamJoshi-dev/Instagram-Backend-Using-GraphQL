@@ -3,3 +3,8 @@ export interface IAuthCreate {
   email: string;
   password: string;
 }
+
+export interface IAuthLogin {
+  name: string;
+  password: string;
+}

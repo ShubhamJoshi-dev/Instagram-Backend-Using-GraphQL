@@ -10,6 +10,11 @@ class BcryptHelper {
     const encryptedValue = await bcrypt.hash(value, salt);
     return encryptedValue;
   }
+
+  public async comparePassword(oldPassword: string, encryptedPassword: string) {
+    const compareStatus = await bcrypt.compare(oldPassword, encryptedPassword);
+    return compareStatus;
+  }
 }
 
 const getBcryptInstances = (): BcryptHelper => {
