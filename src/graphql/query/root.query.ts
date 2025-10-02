@@ -25,11 +25,23 @@ export const rootQuery = `#graphql
 
 
 
+        type CustomErrorResponse{
+            message:String
+            code:Int
+        }
+
+
+        type UserCreateResponse {
+            user:User
+            error:CustomErrorResponse
+
+        }
+
 
         # ----------- Mutation ------------- #
 
         type Mutation {
-            createUser(user:UserCreateInput!):User
+            createUser(user:UserCreateInput!):UserCreateResponse
         }
 
         
