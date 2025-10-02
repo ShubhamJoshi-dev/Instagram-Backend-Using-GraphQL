@@ -4,7 +4,8 @@ export const rootQuery = `#graphql
   # ----------- Query ------------- #
 
         type Query {
-            health:Health            
+            health:Health    
+            user:User        
         }
          type Health{
             service:String
@@ -27,7 +28,6 @@ export const rootQuery = `#graphql
             accessToken:String!
             refreshToken:String!
         }
-
 
 
         type CustomErrorResponse{

@@ -13,6 +13,12 @@ class JWTHelper {
     return signKey;
   }
 
+  public async verifyAccessToken(token: string) {
+    const secretKey = getEnvValue("ACCESS_TOKEN") as string;
+    const decodedPayload = jwt.verify(token, secretKey);
+    return decodedPayload;
+  }
+
   public async createRefreshToken(payload: Record<string, any>) {
     const options = {
       expiresIn: "1d",
