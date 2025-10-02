@@ -1,4 +1,8 @@
 export const rootQuery = `#graphql 
+
+
+  # ----------- Query ------------- #
+
         type Query {
             health:Health            
         }
@@ -11,5 +15,29 @@ export const rootQuery = `#graphql
         type Usage {
             user:Int
             system:Int
+        }
+
+        type User {
+            name:String!
+            email:String!
+            password:String!
+        }
+
+
+
+
+        # ----------- Mutation ------------- #
+
+        type Mutation {
+            createUser(user:UserCreateInput!):User
+        }
+
+        
+        # ----------- Input ------------- #
+        
+        input UserCreateInput {
+            name:String
+            email:String
+            password:String
         }
 `;

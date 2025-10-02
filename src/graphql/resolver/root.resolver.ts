@@ -1,9 +1,12 @@
 import { healthResolver } from "../../resolvers/health.resolver";
+import { baseMutationResolver } from "./mutation/base.mutation";
+import { baseQueryResolver } from "./queries/base.query";
 
 export const resolvers = {
   Query: {
-    health: (_parent: any, _args: any, _context: any, _info: any) => {
-      return healthResolver();
-    },
+    ...baseQueryResolver,
+  },
+  Mutation: {
+    ...baseMutationResolver,
   },
 };
