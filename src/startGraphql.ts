@@ -1,19 +1,44 @@
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { ApolloServer, BaseContext } from "@apollo/server";
 import { ErrorAnyType } from "./types/types";
-import { startStandaloneServer } from "@apollo/server/standalone";
+import { expressMiddleware } from "@as-integrations/express5";
 import { ApolloServerAbstract } from "./abstraction/apollo.abstract";
 import { baseConnector } from "./base/base.connect";
-import graphLogger from "./libs/logger.libs";
+import graphLogger from "./c/logger.libs";
+import express from "express";
+import http from "http";
+import cors from "cors";
 import apolloConfig from "./config/apollo.config";
+import { getEnvValue } from "./utils/env.utils";
 
 class StartApolloServer implements ApolloServerAbstract {
   public async startGraphQLServer(): Promise<void> {
     try {
-      const server = new ApolloServer<BaseContext>(apolloConfig);
-      const { url } = await startStandaloneServer(server);
+      const app = express();
+      const httpServer = http.createServer(app);
+      const server = new ApolloServer<BaseContext>(
+        Object.assign(apolloConfig, {
+          plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        })
+      );
       const { status } = await baseConnector();
-      graphLogger.info(
-        `Apollo Server is Running on the URL: ${url} with the Connector Base Status : ${status}`
+      await server.start();
+      app.use(
+        "/",
+        express.json(),
+        expressMiddleware(server, {
+          context: async ({ req }) => ({ token: req.headers.token }),
+        })
+      );
+      httpServer.listen(
+        { port: parseInt(getEnvValue("PORT") as string, 10) },
+        () => {
+          graphLogger.info(
+            `Apollo Server is Running on the URL: http://localhost:${getEnvValue(
+              "PORT"
+            )}/graphql with the Connector Base Status : ${status}`
+          );
+        }
       );
     } catch (err: ErrorAnyType) {
       graphLogger.error(
