@@ -4,6 +4,16 @@ export interface IAuthCreate {
   password: string;
 }
 
+export interface IUser extends IAuthCreate {}
+
+export interface IUserProfile {
+  userProfileName: string;
+  primaryEmail: string;
+  secondaryEmail: string;
+  phoneNumber: string;
+  isDeleted: boolean;
+  isDeactivated: boolean;
+}
 export interface IAuthLogin {
   name: string;
   password: string;

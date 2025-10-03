@@ -5,7 +5,9 @@ export const rootQuery = `#graphql
 
         type Query {
             health:Health    
-            user:User        
+            user:UserProfileResponse    
+            posts:[Post]
+            post:Post    
         }
          type Health{
             service:String
@@ -31,12 +33,17 @@ export const rootQuery = `#graphql
             phoneNumber:String
             isDeleted:Boolean
             isDeactivated:Boolean
-            userId:User
         }
 
         type Token {
             accessToken:String!
             refreshToken:String!
+        }
+
+        type Post {
+            title:String
+            description:String
+            tags:[String]
         }
 
 
@@ -57,14 +64,25 @@ export const rootQuery = `#graphql
             error:CustomErrorResponse
         }
 
-        
 
+        type UserProfileResponse {
+            user:User
+            userProfile:UserProfile
+            error:CustomErrorResponse
+        }
+
+        type PostUserResponse{
+            post:Post
+            error:CustomErrorResponse
+        }
+        
 
         # ----------- Mutation ------------- #
 
         type Mutation {
             createUser(user:UserCreateInput!):UserCreateResponse
             loginUser(user:UserLoginInput!):UserLoginResponse
+            postUser(post:PostInput!):PostUserResponse
         }
 
         
@@ -79,5 +97,11 @@ export const rootQuery = `#graphql
         input UserLoginInput {
             name:String
             password:String
+        }
+
+        input PostInput {
+            title:String
+            description:String
+            tags:[String]
         }
 `;

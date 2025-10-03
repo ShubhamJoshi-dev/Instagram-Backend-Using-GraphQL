@@ -1,5 +1,6 @@
 import getCreateInstance from "./create";
 import getSelectInstance from "./select";
+import getUpdateInstance from "./update";
 
 class BaseQuery {
   public async getSelect() {
@@ -10,6 +11,11 @@ class BaseQuery {
   public async getCreate() {
     const createInstance = getCreateInstance();
     return createInstance;
+  }
+
+  public async getUpdate() {
+    const updateInstance = getUpdateInstance();
+    return updateInstance;
   }
 }
 
