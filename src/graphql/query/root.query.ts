@@ -4,7 +4,10 @@ export const rootQuery = `#graphql
   # ----------- Query ------------- #
 
         type Query {
-            health:Health            
+            health:Health    
+            user:UserProfileResponse    
+            posts:[Post]
+            post(postId:ID!):PostUserResponse   
         }
          type Health{
             service:String
@@ -23,11 +26,29 @@ export const rootQuery = `#graphql
             password:String!
         }
 
+        type UserProfile {
+            userProfileName:String
+            primaryEmail:String
+            secondaryEmail:String
+            phoneNumber:String
+            isDeleted:Boolean
+            isDeactivated:Boolean
+        }
+
         type Token {
             accessToken:String!
             refreshToken:String!
         }
 
+        type Post {
+            title:String
+            description:String
+            tags:[String]
+        }
+
+        type Comment {
+            comment:String
+        } 
 
 
         type CustomErrorResponse{
@@ -48,11 +69,30 @@ export const rootQuery = `#graphql
         }
 
 
+        type UserProfileResponse {
+            user:User
+            userProfile:UserProfile
+            error:CustomErrorResponse
+        }
+
+        type PostUserResponse{
+            post:Post
+            error:CustomErrorResponse
+        }
+
+        type CommentPostResponse {
+            comments:[Comment]
+            error:CustomErrorResponse
+        }
+        
+
         # ----------- Mutation ------------- #
 
         type Mutation {
             createUser(user:UserCreateInput!):UserCreateResponse
             loginUser(user:UserLoginInput!):UserLoginResponse
+            postUser(post:PostInput!):PostUserResponse
+            commentPost(comment:CommentInput!):CommentPostResponse
         }
 
         
@@ -67,5 +107,15 @@ export const rootQuery = `#graphql
         input UserLoginInput {
             name:String
             password:String
+        }
+
+        input PostInput {
+            title:String
+            description:String
+            tags:[String]
+        }
+
+        input CommentInput {
+            comment:String
         }
 `;

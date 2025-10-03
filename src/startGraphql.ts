@@ -7,7 +7,6 @@ import { baseConnector } from "./base/base.connect";
 import graphLogger from "./libs/logger.libs";
 import express from "express";
 import http from "http";
-import cors from "cors";
 import apolloConfig from "./config/apollo.config";
 import { getEnvValue } from "./utils/env.utils";
 
@@ -26,6 +25,7 @@ class StartApolloServer implements ApolloServerAbstract {
       app.use(
         "/",
         express.json(),
+        express.urlencoded({ extended: true }),
         expressMiddleware(server, {
           context: async ({ req }) => ({ token: req.headers.token }),
         })
