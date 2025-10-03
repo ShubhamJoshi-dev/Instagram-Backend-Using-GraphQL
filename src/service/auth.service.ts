@@ -7,6 +7,7 @@ import getBaseQuery from "../database/operations/base";
 import userModel from "../database/models/user.schema";
 import { excludeKeysFromObject } from "../utils/common.utils";
 import getJWTInstance from "../helpers/jwt.helper";
+import userProfileModel from "../database/models/userProfile.schema";
 
 async function createUserService(args: { user: IAuthCreate }) {
   const { name, email, password } = args.user;
@@ -45,6 +46,19 @@ async function createUserService(args: { user: IAuthCreate }) {
   const saveResult = await createInstance.createPayload(
     createPayload,
     userModel
+  );
+
+  const saveUserId = saveResult._doc._id;
+
+  const userProfilePayload = Object.preventExtensions({
+    userProfileName: name,
+    primaryEmail: email,
+    userId: saveUserId,
+  });
+
+  const saveProfileResult = await createInstance.createPayload(
+    userProfilePayload,
+    userProfileModel
   );
 
   return {

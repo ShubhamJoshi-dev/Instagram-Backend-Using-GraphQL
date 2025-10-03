@@ -28,3 +28,7 @@ export const includeKeyIntoObjects = (
   }
   return newPayload;
 };
+
+export const logEmptyAttribute = (key: string) => {
+  return `The ${key} is Missing on the Field for Inserting the Data in the MongoDB`;
+};

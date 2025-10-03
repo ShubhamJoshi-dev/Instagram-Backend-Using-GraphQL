@@ -24,6 +24,16 @@ export const rootQuery = `#graphql
             password:String!
         }
 
+        type UserProfile {
+            userProfileName:String
+            primaryEmail:String
+            secondaryEmail:String
+            phoneNumber:String
+            isDeleted:Boolean
+            isDeactivated:Boolean
+            userId:User
+        }
+
         type Token {
             accessToken:String!
             refreshToken:String!
@@ -46,6 +56,8 @@ export const rootQuery = `#graphql
             tokens:Token
             error:CustomErrorResponse
         }
+
+        
 
 
         # ----------- Mutation ------------- #
