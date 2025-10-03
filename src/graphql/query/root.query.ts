@@ -7,7 +7,7 @@ export const rootQuery = `#graphql
             health:Health    
             user:UserProfileResponse    
             posts:[Post]
-            post:Post    
+            post(postId:ID!):PostUserResponse   
         }
          type Health{
             service:String

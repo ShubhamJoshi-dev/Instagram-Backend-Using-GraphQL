@@ -100,11 +100,82 @@ async function postUserService(
   };
 }
 
-async function getAllPostService(): Promise<IPost> {
+async function getAllPostService(): Promise<Array<IPost>> {
   const baseInstance = getBaseQuery();
   const selectInstance = await baseInstance.getSelect();
-  const allPost = await selectInstance.findAll(postModel);
-  return allPost;
+  const toPopulateQuery = [
+    {
+      path: "tags",
+    },
+    {
+      path: "postedBy",
+    },
+  ];
+  const allPost = await selectInstance.findAllPopulate(
+    postModel,
+    toPopulateQuery
+  );
+  const mappedPostData = allPost.map((data: Record<string, any>) => {
+    const payload = {
+      title: data.title,
+      description: data.description,
+      comments: data.comments,
+      createdAt: data.createdAt,
+      tags: data.tags.tags,
+      postedBy: data.postedBy.name,
+    };
+    return payload;
+  });
+  return mappedPostData;
 }
 
-export { postUserService, getAllPostService };
+async function getPostService(
+  postId: string
+): Promise<{ post: IPost } | { error: { message: string; code: number } }> {
+  const baseInstance = getBaseQuery();
+  const payloadInstance = getPayloadInstances();
+
+  const selectQuery = await baseInstance.getSelect();
+  const toPopulateQuery = [
+    {
+      path: "tags",
+    },
+    {
+      path: "postedBy",
+    },
+  ];
+  const postData = await selectQuery.findOnePopulate(
+    "_id",
+    postId,
+    postModel,
+    toPopulateQuery
+  );
+
+  const postPayload = includeKeyIntoObjects(
+    postData._doc,
+    "title",
+    "description"
+  );
+  const tagsPayload = includeKeyIntoObjects(postData._doc.tags._doc, "tags");
+  const userPayload = includeKeyIntoObjects(
+    postData._doc.postedBy._doc,
+    "name"
+  );
+  const mainPayload = {
+    ...postPayload,
+    ...tagsPayload,
+    ...userPayload,
+  };
+
+  if (!postData) {
+    const errorMessage = `The Post Does not Exists or The Post is Deleted`;
+    const errorStatusCode = StatusCode.BAD_REQUEST;
+    return payloadInstance.createErrorPayload(errorMessage, errorStatusCode);
+  }
+
+  return {
+    post: mainPayload,
+  };
+}
+
+export { postUserService, getAllPostService, getPostService };
