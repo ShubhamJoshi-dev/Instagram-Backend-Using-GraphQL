@@ -24,6 +24,20 @@ const postSchema = new mongoose.Schema({
     },
   ],
 
+  likes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Likes",
+    },
+  ],
+
+  unlikes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Unlikes",
+    },
+  ],
+
   createdAt: {
     type: Date,
     default: new Date(),

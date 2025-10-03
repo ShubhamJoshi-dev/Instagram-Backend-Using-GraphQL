@@ -46,6 +46,10 @@ export const rootQuery = `#graphql
             tags:[String]
         }
 
+        type Comment {
+            comment:String
+        } 
+
 
         type CustomErrorResponse{
             message:String
@@ -75,6 +79,11 @@ export const rootQuery = `#graphql
             post:Post
             error:CustomErrorResponse
         }
+
+        type CommentPostResponse {
+            comments:[Comment]
+            error:CustomErrorResponse
+        }
         
 
         # ----------- Mutation ------------- #
@@ -83,6 +92,7 @@ export const rootQuery = `#graphql
             createUser(user:UserCreateInput!):UserCreateResponse
             loginUser(user:UserLoginInput!):UserLoginResponse
             postUser(post:PostInput!):PostUserResponse
+            commentPost(comment:CommentInput!):CommentPostResponse
         }
 
         
@@ -103,5 +113,9 @@ export const rootQuery = `#graphql
             title:String
             description:String
             tags:[String]
+        }
+
+        input CommentInput {
+            comment:String
         }
 `;
