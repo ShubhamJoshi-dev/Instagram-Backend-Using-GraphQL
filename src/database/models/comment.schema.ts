@@ -7,6 +7,11 @@ const commentSchema = new mongoose.Schema({
     required: [true, logEmptyAttribute("Comment")],
   },
 
+  commentedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users",
+  },
+
   commentCreatedAt: {
     type: Date,
     default: new Date(),

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import userModel from "../models/user.schema";
 
 class UpdateQuery {
@@ -23,6 +24,26 @@ class UpdateQuery {
       {
         $push: {
           comments: commentId,
+        },
+      }
+    );
+
+    return updatedResult;
+  }
+
+  public async updateLikePayloadByArray<T, K>(
+    filterQuery: {
+      key: T;
+      value: K;
+    },
+    likeId: Types.ObjectId,
+    model: any
+  ) {
+    const updatedResult = await model.updateOne(
+      { [filterQuery.key as string]: filterQuery.value },
+      {
+        $push: {
+          likes: likeId,
         },
       }
     );

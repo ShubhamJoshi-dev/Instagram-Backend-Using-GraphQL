@@ -93,6 +93,8 @@ export const rootQuery = `#graphql
             loginUser(user:UserLoginInput!):UserLoginResponse
             postUser(post:PostInput!):PostUserResponse
             commentPost(comment:CommentInput!,postId:ID!):CommentPostResponse
+            likePost(postId:ID!):PostUserResponse
+            unlikePost(postId:ID!):PostUserResponse
         }
 
         

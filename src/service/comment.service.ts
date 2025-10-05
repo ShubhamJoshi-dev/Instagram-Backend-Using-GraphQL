@@ -10,6 +10,7 @@ async function commentPostService(
   args: { comment: ICommentWithId; postId: string },
   decodedPayload: IDecodedPayload
 ) {
+  const { userId } = decodedPayload;
   const baseInstance = getBaseQuery();
   const payloadInstance = getPayloadInstances();
   const selectInstance = await baseInstance.getSelect();
@@ -32,6 +33,7 @@ async function commentPostService(
 
   const commentPayload = Object.preventExtensions({
     comment: comment.trim(),
+    commentedBy: userId,
   });
 
   const saveCommentData = await createInstance.createPayload(
