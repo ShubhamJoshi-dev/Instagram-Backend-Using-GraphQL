@@ -1,5 +1,8 @@
 interface IComment {
   comment: string;
 }
+interface ICommentWithId extends IComment {
+  postId: string;
+}
 
-export { IComment };
+export { IComment, ICommentWithId };

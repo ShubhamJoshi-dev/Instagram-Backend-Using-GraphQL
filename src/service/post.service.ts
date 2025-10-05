@@ -51,7 +51,9 @@ async function postUserService(
     postModel
   );
 
-  const postId = savePostPayloadResult._doc._id;
+  const postId = await baseInstance.convertToMongooseId(
+    savePostPayloadResult._doc._id
+  );
 
   const filteredTags = tags.map((item: string) => item.trim()).filter(Boolean);
 
@@ -66,10 +68,12 @@ async function postUserService(
     tagsModel
   );
 
-  const tagsId = saveTagsPayload._doc._id;
+  const tagsId = await baseInstance.convertToMongooseId(
+    saveTagsPayload._doc._id
+  );
 
   const filterQuery = {
-    [`_id`]: postId,
+    [`"_id"`]: postId,
   } as any;
 
   const updatePayload = Object.preventExtensions({

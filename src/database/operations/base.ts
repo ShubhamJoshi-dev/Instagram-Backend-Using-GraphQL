@@ -1,8 +1,18 @@
+import mongoose from "mongoose";
 import getCreateInstance from "./create";
 import getSelectInstance from "./select";
 import getUpdateInstance from "./update";
 
-class BaseQuery {
+class BaseConverter {
+  public async convertToMongooseId(id: Buffer) {
+    return new mongoose.Types.ObjectId(id);
+  }
+}
+
+class BaseQuery extends BaseConverter {
+  constructor() {
+    super();
+  }
   public async getSelect() {
     const selectInstances = getSelectInstance();
     return selectInstances;
