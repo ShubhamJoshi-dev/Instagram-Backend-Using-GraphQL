@@ -9,7 +9,8 @@ export const postQueryResolver = {
       async ({ data, status }: { data: any; status: boolean }) => {
         const isBooleanStatus = typeof status === "boolean";
         if (isBooleanStatus && status) {
-          return await getAllPostService();
+          const { userId } = data;
+          return await getAllPostService(userId);
         } else {
           return null;
         }
