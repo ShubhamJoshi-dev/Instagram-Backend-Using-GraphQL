@@ -1,16 +1,17 @@
-import serverMiddleware from "../../../middleware/auth.middeware";
-import { getPostService } from "../../../service/post.service";
-import { getAllPostService } from "../../mutation/post.mutation";
+import serverMiddleware from "../../../../middleware/auth.middeware";
+import {
+  likeMutation,
+  unlikeMutation,
+} from "../../../mutation/likeUnlike.mutation";
 
-export const postQueryResolver = {
-  posts: (_parent: any, args: any, context: any, _info: any) => {
+export const likeUnlikeMutation = {
+  likePost: (_parent: any, args: any, context: any, info: any) => {
     const token = context.token;
     return serverMiddleware(token).then(
       async ({ data, status }: { data: any; status: boolean }) => {
         const isBooleanStatus = typeof status === "boolean";
         if (isBooleanStatus && status) {
-          const { userId } = data;
-          return await getAllPostService(userId);
+          return await likeMutation(args, data);
         } else {
           return null;
         }
@@ -18,14 +19,13 @@ export const postQueryResolver = {
     );
   },
 
-  post: (_parent: any, args: any, context: any, _info: any) => {
+  unlikePost: (_parent: any, args: any, context: any, info: any) => {
     const token = context.token;
     return serverMiddleware(token).then(
       async ({ data, status }: { data: any; status: boolean }) => {
         const isBooleanStatus = typeof status === "boolean";
         if (isBooleanStatus && status) {
-          const postId = args.postId;
-          return await getPostService(postId);
+          return await unlikeMutation(args, data);
         } else {
           return null;
         }

@@ -1,9 +1,13 @@
 import { connectMongoose } from "../database/connect";
+import flushAllKeysFromRedis from "../redis/redis.flush";
 import graphLogger from "../libs/logger.libs";
 
 async function baseConnector(): Promise<{ status: boolean }> {
   let allConnectedStatus = true;
-  const connectPromise = await Promise.allSettled([connectMongoose()]);
+  const connectPromise = await Promise.allSettled([
+    connectMongoose(),
+    flushAllKeysFromRedis(),
+  ]);
   const filteredErrors = connectPromise.filter(
     (item: PromiseSettledResult<void>) => item.status !== "fulfilled"
   );

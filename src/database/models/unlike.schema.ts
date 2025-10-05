@@ -6,6 +6,11 @@ const unlikeSchema = new mongoose.Schema({
     ref: "Users",
   },
 
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Posts",
+  },
+
   unlikeAt: {
     type: Date,
     default: new Date(),

@@ -47,7 +47,7 @@ export const rootQuery = `#graphql
         }
 
         type Comment {
-            comment:String
+            comment:[String]
         } 
 
 
@@ -92,7 +92,9 @@ export const rootQuery = `#graphql
             createUser(user:UserCreateInput!):UserCreateResponse
             loginUser(user:UserLoginInput!):UserLoginResponse
             postUser(post:PostInput!):PostUserResponse
-            commentPost(comment:CommentInput!):CommentPostResponse
+            commentPost(comment:CommentInput!,postId:ID!):CommentPostResponse
+            likePost(postId:ID!):PostUserResponse
+            unlikePost(postId:ID!):PostUserResponse
         }
 
         

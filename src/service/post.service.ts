@@ -2,11 +2,16 @@ import userModel from "../database/models/user.schema";
 import getBaseQuery from "../database/operations/base";
 import StatusCode from "http-status-codes";
 import getPayloadInstances from "../helpers/payload.helper";
+import getRedisInstance from "../redis/redis.connect";
 import { IDecodedPayload } from "../interface/auth.interface";
 import { IPost } from "../interface/post.interface";
 import postModel from "../database/models/post.schema";
 import tagsModel from "../database/models/tags.schema";
 import { includeKeyIntoObjects } from "../utils/common.utils";
+import { generateRedisKeyBasedOnUserId } from "../redis/keys/redis.key";
+import RedisCache from "../redis/redis.cache";
+import { CACHE_HIT, CACHE_MISS } from "../constant/redis.constant";
+import graphLogger from "../libs/logger.libs";
 
 async function postUserService(
   payload: { post: IPost },
@@ -46,7 +51,9 @@ async function postUserService(
     postModel
   );
 
-  const postId = savePostPayloadResult._doc._id;
+  const postId = await baseInstance.convertToMongooseId(
+    savePostPayloadResult._doc._id
+  );
 
   const filteredTags = tags.map((item: string) => item.trim()).filter(Boolean);
 
@@ -61,10 +68,12 @@ async function postUserService(
     tagsModel
   );
 
-  const tagsId = saveTagsPayload._doc._id;
+  const tagsId = await baseInstance.convertToMongooseId(
+    saveTagsPayload._doc._id
+  );
 
   const filterQuery = {
-    [`_id`]: postId,
+    [`"_id"`]: postId,
   } as any;
 
   const updatePayload = Object.preventExtensions({
@@ -100,33 +109,63 @@ async function postUserService(
   };
 }
 
-async function getAllPostService(): Promise<Array<IPost>> {
+async function getAllPostService(
+  userId: string
+): Promise<Array<IPost> | undefined> {
   const baseInstance = getBaseQuery();
-  const selectInstance = await baseInstance.getSelect();
-  const toPopulateQuery = [
-    {
-      path: "tags",
-    },
-    {
-      path: "postedBy",
-    },
-  ];
-  const allPost = await selectInstance.findAllPopulate(
-    postModel,
-    toPopulateQuery
-  );
-  const mappedPostData = allPost.map((data: Record<string, any>) => {
-    const payload = {
-      title: data.title,
-      description: data.description,
-      comments: data.comments,
-      createdAt: data.createdAt,
-      tags: data.tags.tags,
-      postedBy: data.postedBy.name,
-    };
-    return payload;
-  });
-  return mappedPostData;
+  const redisInstance = getRedisInstance();
+  const redisClient = await redisInstance.getRedisClient();
+  const cacheInstance = new RedisCache(redisClient);
+  const redisKey = await generateRedisKeyBasedOnUserId(userId, redisClient);
+
+  const redisData = await cacheInstance.cacheLifeCycle(redisKey as string);
+
+  if (redisData) {
+    const { status, data, info } = redisData;
+
+    switch (info) {
+      case CACHE_MISS: {
+        const selectInstance = await baseInstance.getSelect();
+        const toPopulateQuery = [
+          {
+            path: "tags",
+          },
+          {
+            path: "postedBy",
+          },
+          {
+            path: "comments",
+          },
+        ];
+        const allPost = await selectInstance.findAllPopulate(
+          postModel,
+          toPopulateQuery
+        );
+        const mappedPostData = allPost.map((data: Record<string, any>) => {
+          const payload = {
+            title: data.title,
+            description: data.description,
+            comments: data.comments.map((comment: Record<string, any>) =>
+              comment.comment.trim()
+            ),
+            createdAt: data.createdAt,
+            tags: data.tags.tags,
+            postedBy: data.postedBy.name,
+          };
+          return payload;
+        });
+        if (redisKey) {
+          await cacheInstance.appendInCache(redisKey, mappedPostData);
+        }
+        return mappedPostData;
+      }
+
+      case CACHE_HIT: {
+        graphLogger.info(`Cache Hit, Sending Data From the Redis`);
+        return JSON.parse(data);
+      }
+    }
+  }
 }
 
 async function getPostService(
