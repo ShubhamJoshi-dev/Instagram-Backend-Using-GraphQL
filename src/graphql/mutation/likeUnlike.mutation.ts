@@ -6,6 +6,9 @@ async function likeMutation(payload: any, decodedPayload: IDecodedPayload) {
   return graphqlResponse;
 }
 
-async function unlikeMutation(payload: any, decodedPayload: IDecodedPayload) {}
+async function unlikeMutation(payload: any, decodedPayload: IDecodedPayload) {
+  const graphqlResponse = await unlikeService(payload, decodedPayload);
+  return graphqlResponse;
+}
 
 export { likeMutation, unlikeMutation };

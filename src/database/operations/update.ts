@@ -50,6 +50,26 @@ class UpdateQuery {
 
     return updatedResult;
   }
+
+  public async updateUnLikePayloadArray<T, K>(
+    filterQuery: {
+      key: T;
+      value: K;
+    },
+    unlikeId: Types.ObjectId,
+    model: any
+  ) {
+    const updatedResult = await model.updateOne(
+      { [filterQuery.key as string]: filterQuery.value },
+      {
+        $push: {
+          unlikes: unlikeId,
+        },
+      }
+    );
+
+    return updatedResult;
+  }
 }
 
 const getUpdateInstance = (): UpdateQuery => {

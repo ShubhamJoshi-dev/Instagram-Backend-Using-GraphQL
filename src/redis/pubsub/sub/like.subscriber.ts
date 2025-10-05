@@ -48,6 +48,7 @@ async function likeSubscriber(redisClient: RedisClientType) {
         );
         try {
           await likeSubscriberHandler(message);
+          graphLogger.info(`Like Subscribers Process Has been Completed`);
         } catch (err: ErrorAnyType) {
           const errroMessage = `Like Subscriber Handler Encountered an Error, Due To : ${JSON.stringify(
             err.message
