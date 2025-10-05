@@ -133,6 +133,9 @@ async function getAllPostService(
           {
             path: "postedBy",
           },
+          {
+            path: "comments",
+          },
         ];
         const allPost = await selectInstance.findAllPopulate(
           postModel,
@@ -142,7 +145,9 @@ async function getAllPostService(
           const payload = {
             title: data.title,
             description: data.description,
-            comments: data.comments,
+            comments: data.comments.map((comment: Record<string, any>) =>
+              comment.comment.trim()
+            ),
             createdAt: data.createdAt,
             tags: data.tags.tags,
             postedBy: data.postedBy.name,
